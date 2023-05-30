@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import mixins, permissions, status
 from rest_framework.response import Response
@@ -61,6 +62,22 @@ class GroupMemberView(mixins.CreateModelMixin,
         permissions.IsAuthenticated,
         GroupMemberPermission,
     ]
+
+    def list(self, request, *args, **kwargs):
+        group_id = self.request.query_params.get('group_id', False)
+        if group_id:
+            group_id = int(group_id)
+            queryset = self.filter_queryset(
+                self.get_queryset()
+            ).filter(group_id=group_id).values_list("group_member_id", flat=True)
+            members_usernames = User.objects.filter(id__in=queryset).values_list("username", flat=True)
+            data = {
+                "group_members": members_usernames
+            }
+            return Response(data)
+
+        error = {"error": "Please provide group_id in get parameters"}
+        return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -133,7 +150,7 @@ class GroupMemberView(mixins.CreateModelMixin,
         user_id = request.user.id
 
         try:
-            group = Group.objects.get(id=group_id)
+            Group.objects.get(id=group_id)
         except ObjectDoesNotExist:
             error = {"error": f"Group with group_id={group_id} does not exists"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)

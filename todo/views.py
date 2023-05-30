@@ -23,6 +23,25 @@ class TodoView(mixins.CreateModelMixin,
         TodoGetPermission
     ]
 
+    def list(self, request, *args, **kwargs):
+        group_id = self.request.query_params.get('group_id', False)
+        if group_id:
+            group_id = int(group_id)
+            queryset = self.filter_queryset(
+                self.get_queryset()
+            ).filter(todo_group_id=group_id)
+
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
+        error = {"error": "Please provide group_id in get parameters"}
+        return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
     def create(self, request, *args, **kwargs):
         data = request.data
         data["todo_owner_id"] = request.user.id
