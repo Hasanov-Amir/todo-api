@@ -26,5 +26,5 @@ class TodoGroupPermission(permissions.BasePermission):
             ).values_list("group_member_id", flat=True)
             is_group_member = user_id in group_members_id_list
             is_group_owner = user_id == group_owner_id
-            return is_group_member and is_group_owner
+            return is_group_member or is_group_owner
         return True
