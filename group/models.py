@@ -10,6 +10,7 @@ class Group(models.Model):
     group_password = models.CharField(max_length=100, verbose_name="Group Password")
     group_description = models.TextField(verbose_name="Group Description")
     group_owner_id = models.PositiveSmallIntegerField(verbose_name="Group Owner ID")
+    group_owner_name = models.CharField(max_length=100, verbose_name="Group Owner Name")
     group_create_datetime = models.DateTimeField(auto_now_add=True, verbose_name="Group Create Date and Time")
     group_edit_datetime = models.DateTimeField(auto_now=True, verbose_name="Group Edit Date and Time")
 

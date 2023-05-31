@@ -28,6 +28,7 @@ class GroupView(mixins.CreateModelMixin,
     def create(self, request, *args, **kwargs):
         data = request.data
         data["group_owner_id"] = request.user.id
+        data["group_owner_name"] = request.user.username
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
