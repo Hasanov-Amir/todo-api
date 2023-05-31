@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from rest_framework import mixins, permissions, status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -36,7 +37,9 @@ class GroupView(mixins.CreateModelMixin,
     def list(self, request, *args, **kwargs):
         user_id = request.user.id
         list_of_participating_groups = GroupMember.objects.filter(group_member_id=user_id).values_list("group_id", flat=True)
-        queryset = self.filter_queryset(self.get_queryset()).filter(id__in=list_of_participating_groups)
+        queryset = self.filter_queryset(self.get_queryset()).filter(
+            Q(id__in=list_of_participating_groups) | Q(group_owner_id=user_id)
+        )
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
