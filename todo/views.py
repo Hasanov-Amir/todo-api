@@ -46,7 +46,7 @@ class TodoView(mixins.CreateModelMixin,
         data = request.data
         user = request.user
         data["todo_owner_id"] = user.id
-        data["todo_owner_name"] = user.name
+        data["todo_owner_name"] = user.username
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

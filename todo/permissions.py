@@ -20,7 +20,7 @@ class TodoGroupPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in self.methods:
             user_id = request.user.id
-            group_owner_id = Group.objects.get(id=obj.todo_group_id).id
+            group_owner_id = Group.objects.get(id=obj.todo_group_id).group_owner_id
             group_members_id_list = GroupMember.objects.filter(
                 group_id=obj.todo_group_id
             ).values_list("group_member_id", flat=True)
