@@ -7,6 +7,7 @@ class Todo(models.Model):
     todo_create_datetime = models.DateTimeField(auto_now_add=True, verbose_name="Todo Create Date and Time")
     todo_edit_datetime = models.DateTimeField(auto_now=True, verbose_name="Todo Edit Date and Time")
     todo_owner_id = models.PositiveSmallIntegerField(verbose_name="Todo Owner ID")
+    todo_owner_name = models.CharField(max_length=100, verbose_name="Todo Owner Name")
     todo_group_id = models.PositiveSmallIntegerField(verbose_name="Todo Group ID")
 
     def __str__(self):
