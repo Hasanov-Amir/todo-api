@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 from todo.models import Todo
 from .utils import create_hash

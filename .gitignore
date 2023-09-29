@@ -2,5 +2,4 @@ db.sqlite3
 .env
 venv/
 __pycache__/
-migrations/
 .idea/
